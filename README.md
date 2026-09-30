@@ -2,6 +2,9 @@
 
 Two POSIX shell scripts. One copies an offline bundle and upgrades. The other gets a standalone host to the bar VCF 9.1 commissioning actually checks.
 
+License: GPL-3.0. Built and proved out for [essential.coach](https://essential.coach).
+Full write-up: [Getting a Standalone ESXi Host Ready for VCF Commissioning](https://essential.coach/esxi-hosts-ready-for-vcf-commissioning/)
+
 Commissioning is not an upgrade. VCF rejects a host that is already in a cluster, already in a vCenter, still in maintenance mode, or whose hostname is not the FQDN. See [Commission ESX Hosts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/commission-hosts.html).
 
 ## Run
