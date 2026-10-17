@@ -2,3 +2,10 @@ __pycache__/
 *.pyc
 .env
 *.local.yaml
+# your fleet files, the staged bundle and the run logs; the example stays
+/hosts.yaml
+/hosts-*.yaml
+/*.zip
+/*.part
+/ready-logs/
+/prep-logs/

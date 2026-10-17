@@ -1,0 +1,34 @@
+# hosts.yaml - read by esx_ready.sh (and by esx_push.sh / esx_prep.sh).
+# Keep it next to the script and the bundle zip.
+#
+# Format: top-level "key: value" lines, then a "hosts:" list.
+# Quotes and # comments are fine. An unknown key is a hard error.
+#
+# Valid keys: hosts domain build bundle profile sha256 source datastore update_args
+
+bundle:  VMware-ESXi-9.1.1.0.25714478-depot.zip
+profile: ESXi-9.1.1.0-25714478-standard
+build:   25714478
+sha256:  0000000000000000000000000000000000000000000000000000000000000000
+
+# Datastore on each host that receives the zip:
+#   a name, where {short} is the host without its domain and {host} is the entry as written
+#   a full path, e.g. /vmfs/volumes/datastore1
+#   auto - the largest local datastore with room
+datastore: "{short}_ds1"
+
+domain: example.com      # appended to bare host entries to form the FQDN
+
+# source: /vmfs/volumes/ds/VMware-ESXi-9.1.1.0.25714478-depot.zip
+#                          # optional; default: next to the script
+# update_args: --no-hardware-warning
+#                          # extra esxcli flags. The dry run tells you when
+#                          # you need this; you don't have to guess.
+
+hosts:
+  - host: esx01.example.com
+  - host: esx02.example.com
+  - host: esx03.example.com
+  - host: 10.0.0.14
+    fqdn: esx04.example.com      # an IP needs its FQDN; nothing can guess it
+    datastore: some_other_ds     # per-host override
