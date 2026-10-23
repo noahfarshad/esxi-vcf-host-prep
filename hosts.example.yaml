@@ -4,26 +4,46 @@
 # Format: top-level "key: value" lines, then a "hosts:" list.
 # Quotes and # comments are fine. An unknown key is a hard error.
 #
-# Valid keys: hosts domain build bundle profile sha256 source datastore update_args
+# Valid keys: hosts domain build bundle profile sha256 source datastore
+#             update_args update_mode mgmt_vlan mgmt_uplink min_uplinks ssh
 
 bundle:  VMware-ESXi-9.1.1.0.25714478-depot.zip
 profile: ESXi-9.1.1.0-25714478-standard
 build:   25714478
 sha256:  0000000000000000000000000000000000000000000000000000000000000000
 
+# update_mode: update (the default) only ever moves a VIB forward. Pointed at
+# an older build it reports success and the host stays where it is. install
+# writes the image profile exactly as it is, which is the only way down, and
+# also removes anything the profile does not carry.
+# update_mode: install
+
 # Datastore on each host that receives the zip:
 #   a name, where {short} is the host without its domain and {host} is the entry as written
 #   a full path, e.g. /vmfs/volumes/datastore1
-#   auto - the largest local datastore with room
+#   auto - local storage with room: the boot device first, then a disk vSAN
+#          would not claim, and only then one it would (usually the cache disk)
 datastore: "{short}_ds1"
 
 domain: example.com      # appended to bare host entries to form the FQDN
+
+# min_uplinks: adapters that must report Link Up on each host (default 2).
+# Commissioning wants one uplink on vSwitch0; the add to a cluster maps the
+# host's pnics to the cluster's distributed switch, and a host short of cabled
+# adapters passes every check here and fails there.
+# min_uplinks: 2
+
+# --restore-vswitch reads these two and refuses rather than guess either:
+# mgmt_vlan:   110        # the VLAN the management portgroup tags (0 if untagged)
+# mgmt_uplink: vmnic0     # the adapter carrying management; otherwise the old
+#                         # switch's adapter that reports Link Up is used
 
 # source: /vmfs/volumes/ds/VMware-ESXi-9.1.1.0.25714478-depot.zip
 #                          # optional; default: next to the script
 # update_args: --no-hardware-warning
 #                          # extra esxcli flags. The dry run tells you when
 #                          # you need this; you don't have to guess.
+# ssh: /usr/bin/ssh        # the ssh client, when PATH has none
 
 hosts:
   - host: esx01.example.com
